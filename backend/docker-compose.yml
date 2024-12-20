@@ -1,0 +1,64 @@
+services:
+  fastapi-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fastapi_hostel_dev_img
+    container_name: fastapi_hostel_dev_container
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: development
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - postgres-dev
+    volumes:
+      - ./app:/app
+    env_file:
+      - .env
+
+  fastapi-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fastapi_hostel_prod_img
+    container_name: fastapi_hostel_prod_container
+    ports:
+      - "80:80"
+    environment:
+      ENVIRONMENT: production
+      DATABASE_URL: ${DATABASE_URL_PROD}
+    depends_on:
+      - postgres-prod
+    volumes:
+      - ./app:/app
+    env_file:
+      - .env
+
+  postgres-dev:
+    image: postgres:17.2
+    container_name: postgres_dev_container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+
+  postgres-prod:
+    image: postgres:17.2
+    container_name: postgres_prod_container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_PROD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_PROD}
+      POSTGRES_DB: ${POSTGRES_DB_PROD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+
+volumes:
+  postgres_data_dev:
+  postgres_data_prod:

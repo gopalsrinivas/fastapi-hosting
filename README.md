@@ -8,7 +8,7 @@ sudo apt-get update
 
 ## Command to install python :
 
-sudo apt install python3-pip
+sudo apt install python3 python3-pip python3-venv
 
 ## Command to install git to clone this repository :
 
@@ -26,10 +26,44 @@ ls -l
 
 cd fastapi-hosting
 
+cd backend
+sudo python3 -m venv myenv
+
+source myenv/bin/activate
+
 ## Command to install all the requirements required for the project to run in our case we have created requirements.txt file you can also create your own requirements :
+
+sudo chown -R ubuntu:ubuntu /home/ubuntu/fastapi-hosting/backend/myenv
+sudo chmod -R u+rw /home/ubuntu/fastapi-hosting/backend/myenv
 
 pip install -r requirements.txt
 
 ## Command to run the API :
 
-python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+## sample url:
+
+http://43.204.141.42:8000/
+
+## Development:
+
+docker-compose up --build fastapi-dev
+
+## Production
+
+docker-compose up --build fastapi-prod
+
+## Remove the containers with a single command (stop + remove)
+
+docker stop fastapi_hostel_dev_container && docker rm fastapi_hostel_dev_container
+
+docker stop fastapi_hostel_prod_container && docker rm fastapi_hostel_prod_container
+
+## Removed
+
+docker-compose build --no-cache fastapi-dev
+
+## Access PostgreSQL Container:
+
+docker exec -it postgres psql -U postgres -d fastapi_db
